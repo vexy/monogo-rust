@@ -1,0 +1,12 @@
+# Rust output folders
+/target
+
+# Environment variables
+.env
+
+# VSCode stuff
+.vscode
+.editorconfig
+
+# Mac leftovers
+DS_Store

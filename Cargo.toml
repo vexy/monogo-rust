@@ -1,0 +1,10 @@
+[package]
+name = "mongo_rust_example"
+version = "0.0.1"
+authors = ["Veljko Tekelerović <veljko.tekelerovic@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+tokio = "*"
+mongodb = "1.2.0"
+dotenv = "*"
