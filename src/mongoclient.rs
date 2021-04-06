@@ -1,27 +1,32 @@
-use mongodb::{Client, options::ClientOptions};
+use mongodb::{Client, options::ClientOptions, Collection};
 
 #[derive(Clone, Debug)]
 pub struct MongoClient {
-    pub client: mongodb::Client
+    pub collection: Collection
 }
 
 impl MongoClient {
-    pub async fn from_environment() -> Self {
+    pub async fn proxy_for(database: &str, collection: &str) -> Self {
         // build connection options
         let connection_string = parse_environment_vars();
         let mut client_options = ClientOptions::parse(&connection_string).await.unwrap();
         client_options.app_name = Some("RustMongo".to_string());
 
-        let new_mongo_client = Client::with_options(client_options).unwrap(); 
-
         // initialize new client
-        println!("Client created from the environment, connection string is: {}", connection_string);
-        MongoClient{ client: new_mongo_client }
+        println!("Initializing client with connection string: {}", connection_string);
+        match Client::with_options(client_options) {
+            Ok(new_client) => {
+                // create database and collection proxy
+                let collection_proxy = new_client.database(database).collection(collection);
+                MongoClient{collection: collection_proxy }
+            },
+            Err(e) => { panic!("Unable to proxy with specified parameters.\nOriginal error: {}", e) }
+        }
     }
-    // // pub async fn find_matching(filter) {}
-    // // pub async fn update(filter, new_document) {}
-    // // pub async fn delete(filter, new_document) {}
-    // // pub async fn get_all() {}
+
+    pub async fn simple_greet(&self, with: &str) {
+        println!("Greetings wtih: {}", with);
+    }
 }
 
 
