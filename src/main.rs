@@ -3,10 +3,10 @@ use mongoclient::MongoClient;
 
 #[tokio::main]
 async fn main() -> std::io::Result<()> {
-    // let my_mongo_client = MongoClient::from_environment().await;
-    // let collection = MongoClient::collection_wrap(of: "something");
-    let coll = MongoClient::proxy_for("db", "collection").await;
-    coll.simple_greet("Mongo proxy almost there !").await;
+    let mongo_wrapper = MongoClient::proxy_for("rust_test", "test_coll").await;
+    
+    // coll.simple_greet("Mongo proxy almost there !").await;
+    mongo_wrapper.find_matching().await;
     
     // Interface outline:
     // coll.find_matching(filter) {}
